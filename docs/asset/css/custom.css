@@ -1,0 +1,13 @@
+/*utg-8*/
+/*page fade in*/
+@keyframes fade-in {
+	0% {opacity: 0;}
+	40% {opacity: 0;}
+	100% {opacity: 1;}
+}
+
+.pagefade {
+	animation: fade-in;
+	animation-duration: 4s;
+	-webkit-animation:fade-in 2s;
+}
