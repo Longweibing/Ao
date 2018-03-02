@@ -122,7 +122,7 @@ public class neuralNetworks {
 				double[][] x = weights.get(i);
 				for (int j = 0; j < x.length; j++) {
 					for (int k = 0; k < x[j].length; k++) {
-						// x[j][k] == x[s][j]
+						// x[j][k] == x[s][j]1
 						
 					}
 				}
