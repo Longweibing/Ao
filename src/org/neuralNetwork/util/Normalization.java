@@ -1,4 +1,4 @@
-package org.neuralNetwork.algorithm;
+package org.neuralNetwork.util;
 
 import java.util.List;
 import org.neuralNetwork.component.Neural;

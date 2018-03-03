@@ -1,4 +1,4 @@
-package org.neuralNetwork.algorithm;
+package org.neuralNetwork.util;
 
 import java.util.*;
 import org.neuralNetwork.component.*;
@@ -20,23 +20,7 @@ public class neuralNetworks {
 	 * @param bis 所有偏置值
 	 * @return
 	 */
-	public static Map<Integer, List<List<Neural>>> forward(Layer[] layers, Map<Integer, double[][]> weights, List<Double> bis) {
-		
-		Map<Integer, List<List<Neural>>> result = new HashMap<Integer, List<List<Neural>>>();
-		List<List<Neural>> inputs = new ArrayList<List<Neural>>();
-		List<List<Neural>> outputs = new ArrayList<List<Neural>>();
-		result.put(0, inputs);
-		result.put(1, outputs);
-		for (int i = 0; i < layers.length-1; i++) {
-			List<Neural> inputNeurals = new ArrayList<Neural>();
-			List<Neural> outputNeurals = new ArrayList<Neural>();
-			inputs.add(inputNeurals);
-			outputs.add(outputNeurals);
-			for (int j = 0; j < layers[i+1].size(); j++) {
-				inputNeurals.add(new Neural(0));
-				outputNeurals.add(new Neural(0));
-			}
-		}
+	public static void forward(Layer[] layers, Map<Integer, double[][]> weights, List<List<Double>> bis) {
 		
 		for (int i = 0; i < layers.length; i++) {
 			if (i == 0) continue;
@@ -46,17 +30,13 @@ public class neuralNetworks {
 			    for (int z = 0; z < layers[i-1].size(); z++) {
 			    	sum += layers[i-1].getNeurals().get(z).getValue() * weights.get(i-1)[z][j];
 			    }
-			    sum += bis.get(i-1);
-			    inputs.get(i-1).get(j).setValue(sum);
-			    
-
+			    if (i < layers.length-1)
+			    	sum += bis.get(i+1).get(j);
 			    sum = ActivationFunction.tanh(sum);
 			    layers[i].getNeurals().get(j).setValue(sum);
-			    outputs.get(i-1).get(j).setValue(sum);
 			}
 		}
 		
-		return result;
 	}
 	
 	/**
@@ -66,7 +46,7 @@ public class neuralNetworks {
 	 * @param bis 所有偏置值
 	 * @return
 	 */
-	public static Map<Integer, Object> backward(Layer[] layers, List<Double> target, Map<Integer, double[][]> weights, List<Double> bis, String flag, String alphe) {
+	public static void backward(Layer[] layers, List<Double> target, Map<Integer, double[][]> weights, List<List<Double>> bis, String flag, double alphe) {
 		
 		// 多标签分类的反向传播算法
 		if (flag.equals("multi-label")) {
@@ -106,31 +86,95 @@ public class neuralNetworks {
 				d.add(y);
 			}
 			
-			Map<Integer, List> map = new HashMap<Integer, List>();
+			Map<Integer, List<Double>> map = new HashMap<Integer, List<Double>>();
 			int m = 0;
 			map.put(m++, d);
 			// 计算es等
 			for (int i = layers.length-2; i >= 0; i--) {
-				double x = layers[layers.length-1].getNeurals().get(i).getValue();
-				for (int j = 0; j < layers[i+1].size(); j++) {
-					// d.get(j) * weights
+				List<Double> temp = new ArrayList<Double>();
+				for (int j = 0; j < layers[i].size(); j++) {
+					double e = 0;
+					double x = layers[i].getNeurals().get(j).getValue();
+					for (int k = 0; k < layers[i+1].size(); k++) {
+						// d.get(j) * weights;
+						double a = d.get(k);
+						double b = weights.get(i)[j][k];
+						e += a * b;
+					}
+					e *= (1 + x) * (1 - x);
+					temp.add(e);
 				}
+				map.put(m++, temp);
+				
 			}
 			
 			// 更新权值
+			int n = 0;
 			for (int i = weights.size()-1; i >= 0; i--) {
 				double[][] x = weights.get(i);
 				for (int j = 0; j < x.length; j++) {
 					for (int k = 0; k < x[j].length; k++) {
-						// x[j][k] == x[s][j]1
-						
+						x[j][k] -= alphe * map.get(n).get(k) * layers[i].getNeurals().get(j).getValue();						
 					}
 				}
+				n++;
 			}
 			
 			// 更新偏置值
+			int count = 0;
+			for (int i = bis.size()-1; i >= 0; i++) {
+				for (int j = 0; j < bis.get(i).size(); j++) {
+					double a = bis.get(i).get(j);
+					double b = map.get(count).get(j);
+					a -= alphe * b;
+					bis.get(i).set(j, a);
+				}
+				count++;
+			}
 		}
-		return null;
+	}
+	
+	public static void main(String[] args) {
+		Layer inputlayer = new Layer();
+		inputlayer.add(new Neural(0.2564));
+		inputlayer.add(new Neural(0.7369));
+		inputlayer.add(new Neural(-0.0564));
+		inputlayer.add(new Neural(0.0064));
+		
+		Layer outputlayer = new Layer();
+		outputlayer.add(new Neural(1));
+		outputlayer.add(new Neural(0));
+		outputlayer.add(new Neural(0));
+		outputlayer.add(new Neural(1));
+		
+		List<Double> target = new ArrayList<Double>();
+		target.add(1.0);
+		target.add(0.0);
+		target.add(0.0);
+		target.add(1.0);
+		
+		Layer[] layers = new Layer[] {
+				inputlayer, outputlayer
+		};
+		
+		Map<Integer, double[][]> weights = new HashMap<Integer, double[][]>();
+		double[][] weight = new double[inputlayer.size()][outputlayer.size()];
+		for (int i = 0; i < inputlayer.size(); i++) {
+			for (int j = 0; j <outputlayer.size(); j++) {
+				weight[i][j] = 1;
+			}
+		}
+		weights.put(0, weight);
+		
+		List<List<Double>> bis = new ArrayList<List<Double>>();
+		List<Double> bi = new ArrayList<Double>();
+		for (int i = 0; i < outputlayer.size(); i++) {
+			bi.add(1.0);
+		}
+		
+		neuralNetworks.forward(layers, weights, bis);
+		neuralNetworks.backward(layers, target, weights, bis, "multi-label", 0.5);
+		System.err.println("");
 	}
 	
 }
