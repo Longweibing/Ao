@@ -75,7 +75,7 @@ public class neuralNetworks {
 						double z = layers[layers.length-1].getNeurals().get(couExample.get(j)).getValue();
 						y += Math.exp(-(x - z));
 					}
-					y *= (1 / posExample.size() * couExample.size()) * ((1 + x) * (1 - x));
+					y *= (1 / (double)posExample.size() * couExample.size()) * ((1 + x) * (1 - x));
 				} else {  // 该标签为反例
 					for (int j = 0; j < posExample.size(); j++) {
 						double z = layers[layers.length-1].getNeurals().get(posExample.get(j)).getValue();
@@ -122,7 +122,7 @@ public class neuralNetworks {
 			
 			// 更新偏置值
 			int count = 0;
-			for (int i = bis.size()-1; i >= 0; i++) {
+			for (int i = bis.size()-1; i >= 0; i--) {
 				for (int j = 0; j < bis.get(i).size(); j++) {
 					double a = bis.get(i).get(j);
 					double b = map.get(count).get(j);
@@ -148,7 +148,7 @@ public class neuralNetworks {
 		outputlayer.add(new Neural(1));
 		
 		List<Double> target = new ArrayList<Double>();
-		target.add(1.0);
+		target.add(0.0);
 		target.add(0.0);
 		target.add(0.0);
 		target.add(1.0);
@@ -167,14 +167,19 @@ public class neuralNetworks {
 		weights.put(0, weight);
 		
 		List<List<Double>> bis = new ArrayList<List<Double>>();
-		List<Double> bi = new ArrayList<Double>();
-		for (int i = 0; i < outputlayer.size(); i++) {
-			bi.add(1.0);
-		}
+		
+		for (int i = 0; i < layers.length-1; i++) {
+			List<Double> bi = new ArrayList<Double>();
+			for (int j = 0; j < layers[i].size(); j++) {
+				bi.add(1.0);
+			}
+			bis.add(bi);		
+		}		
 		
 		neuralNetworks.forward(layers, weights, bis);
 		neuralNetworks.backward(layers, target, weights, bis, "multi-label", 0.5);
-		System.err.println("");
+		neuralNetworks.backward(layers, target, weights, bis, "multi-label", 0.5);
+		System.out.println("");
 	}
 	
 }

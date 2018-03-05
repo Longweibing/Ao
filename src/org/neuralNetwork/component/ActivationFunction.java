@@ -1,7 +1,7 @@
 package org.neuralNetwork.component;
 
 /**
- * 神经网络组件
+ * 神经网络激活函数
  * 
  * @author Weibing Long</br>
  * @since 2017.11.24
