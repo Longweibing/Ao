@@ -2,6 +2,8 @@ package org.neuralNetwork.util;
 
 import java.util.*;
 import org.neuralNetwork.component.*;
+import org.neuralNetwork.data.ArffData;
+import org.neuralNetwork.data.Instance;
 
 /**
  * 神经网络相关算法
@@ -120,7 +122,7 @@ public class neuralNetworks {
 				n++;
 			}
 			
-			// 更新偏置值
+			// 更新偏置值 (有问题)
 			int count = 0;
 			for (int i = bis.size()-1; i >= 0; i--) {
 				for (int j = 0; j < bis.get(i).size(); j++) {
@@ -135,50 +137,56 @@ public class neuralNetworks {
 	}
 	
 	public static void main(String[] args) {
+		
+		ArffData arffData = MyFile.getArffData("sources/emotions.arff");
+		int attCount = arffData.getAttCount();
+		int labelCount = arffData.getLabelCount();
+		Instance instance = arffData.getInstance();
+		
 		Layer inputlayer = new Layer();
-		inputlayer.add(new Neural(0.2564));
-		inputlayer.add(new Neural(0.7369));
-		inputlayer.add(new Neural(-0.0564));
-		inputlayer.add(new Neural(0.0064));
-		
 		Layer outputlayer = new Layer();
-		outputlayer.add(new Neural(1));
-		outputlayer.add(new Neural(0));
-		outputlayer.add(new Neural(0));
-		outputlayer.add(new Neural(1));
-		
-		List<Double> target = new ArrayList<Double>();
-		target.add(0.0);
-		target.add(0.0);
-		target.add(0.0);
-		target.add(1.0);
-		
+		List<Double> target = new ArrayList<Double>();		
 		Layer[] layers = new Layer[] {
 				inputlayer, outputlayer
-		};
-		
-		Map<Integer, double[][]> weights = new HashMap<Integer, double[][]>();
-		double[][] weight = new double[inputlayer.size()][outputlayer.size()];
-		for (int i = 0; i < inputlayer.size(); i++) {
-			for (int j = 0; j <outputlayer.size(); j++) {
-				weight[i][j] = 1;
+		};		
+		Map<Integer, double[][]> weights = null;			
+		List<List<Double>> bis = null;
+			
+		for (int i = 0; i < instance.getLineCount(); i++) {
+			// 神经网络各层赋值，其实只要给输入层赋值就可以了，其他层是由输入层逐层确定的
+			for (int j = 0; j < attCount; j++) {
+				inputlayer.add(new Neural(instance.getAllLine().get(i).get(j)));
+			}		
+			for (int j = attCount; j < attCount + labelCount; j++) {
+				outputlayer.add(new Neural(instance.getAllLine().get(i).get(j)));
+				target.add(instance.getAllLine().get(i).get(j));
 			}
+			
+			if (i == 0) {
+				weights = new HashMap<Integer, double[][]>();
+				bis = new ArrayList<List<Double>>();
+				
+				double[][] weight = new double[inputlayer.size()][outputlayer.size()];
+				for (int k = 0; k < inputlayer.size(); k++) {
+					for (int l = 0; l <outputlayer.size(); l++) {
+						weight[k][l] = 1;
+					}
+				}
+				weights.put(0, weight);
+				
+				for (int k = 0; k < layers.length-1; k++) {
+					List<Double> bi = new ArrayList<Double>();
+					for (int l = 0; l < layers[k].size(); l++) {
+						bi.add(1.0);
+					}
+					bis.add(bi);		
+				}
+			}
+			
+			neuralNetworks.forward(layers, weights, bis);
+			neuralNetworks.backward(layers, target, weights, bis, "multi-label", 0.5);
 		}
-		weights.put(0, weight);
 		
-		List<List<Double>> bis = new ArrayList<List<Double>>();
-		
-		for (int i = 0; i < layers.length-1; i++) {
-			List<Double> bi = new ArrayList<Double>();
-			for (int j = 0; j < layers[i].size(); j++) {
-				bi.add(1.0);
-			}
-			bis.add(bi);		
-		}		
-		
-		neuralNetworks.forward(layers, weights, bis);
-		neuralNetworks.backward(layers, target, weights, bis, "multi-label", 0.5);
-		neuralNetworks.backward(layers, target, weights, bis, "multi-label", 0.5);
 		System.out.println("");
 	}
 	
