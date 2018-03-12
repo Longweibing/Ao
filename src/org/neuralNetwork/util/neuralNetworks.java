@@ -123,6 +123,7 @@ public class neuralNetworks {
 			}
 			
 			// 更新偏置值 (有问题)
+			// TODO 未完成
 			int count = 0;
 			for (int i = bis.size()-1; i >= 0; i--) {
 				for (int j = 0; j < bis.get(i).size(); j++) {
