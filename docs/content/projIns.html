@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link href="../asset/css/custom.css" rel="stylesheet" type="text/css">
+	<link href="../asset/css/rainbow.css" rel="stylesheet" type="text/css">
+	<link href="../asset/css/demo.css"  rel="stylesheet" type="text/css" />
+	<link href="../asset/css/style1.css"  rel="stylesheet" type="text/css" />
+	<link href="../asset/css/jquery.autoMenu.css" rel="stylesheet" />
+	<!--please add to your page for more beautiful-->
+	<link href="../asset/css/article.css" rel="stylesheet" />
+</head>
+<body id="pagefade" class="pagefade">
+	<div class="container">
+		<div id="letter-container" class="letter-container">
+				<h2>
+					<a href="#">项目实例</a>
+					<a href="#">项目实例</a>
+				</h2>
+		</div>
+	
+	<h3>神经网络构建的构建</h3>
+	<p>
+		神经网络的构建方法有两种，之所以有两种方法，是因为不同的算法输入参数类型不同。有的需要Java的集合类，有的需要神经网络对象NeuralNetwork。具体如下：
+	</p>
+	<h4>方法一：神经层存入Java集合类</h4>
+<pre>
+<code data-language="java">
+// 构建神经网络
+//    1. 构建神经元
+Neural neural1 = new Neural(0.25);
+Neural neural2 = new Neural(-0.75);
+Neural neural3 = new Neural(-0.45);
+//    2. 构建神经层
+Layer inputLayer = new Layer();
+inputLayer.add(neural1);
+inputLayer.add(neural2);
+inputLayer.add(neural3);
+Layer hiddenLayer = new Layer(256);
+Layer hiddenLayer1 = new Layer(256);
+Layer outputLayer = new Layer(1);
+</code>
+</pre>
+	<p>
+	    上面的代码，神经元构造器的输入参数为double类型，神经层的输入参数为神经元个数，之后神经层添加神经元。这两个组件创建完毕，则神经网络骨架已经建立完成。对于具体的神经网络构建，则根据方法（如：前溃算法、反向传播算法等）的输入参数来作相应的组件封装。多啰嗦一句，当特征向量维数很大时，为了尽量少的写代码，可以将特征向量存入List对象中，通过遍历每一个值赋值到神经元中。 
+	</p>
+
+	<p>
+		上述代码构建的神经层，输入到Java集合类中，该集合类将作为构建完成后的神经网络。
+	</p>
+	
+	<h4>方法二：构建神经网络对象</h4>
+	<p>
+		将所有神经层输入到神经网络对象，也可以作为神经网络，完整代码如下：
+	</p>
+
+<pre>
+<code data-language="java">
+// 构建神经网络
+//	    1. 构建神经元
+Neural neural1 = new Neural(0.25);
+Neural neural2 = new Neural(-0.75);
+Neural neural3 = new Neural(-0.45);
+//	    2. 构建神经层
+Layer inputLayer = new Layer();
+inputLayer.add(neural1);
+inputLayer.add(neural2);
+inputLayer.add(neural3);
+Layer hiddenLayer = new Layer(256);
+Layer hiddenLayer1 = new Layer(256);
+Layer outputLayer = new Layer(1);
+Map< Integer,Layer> hiddenLayers = new HashMap< Integer,Layer>();
+hiddenLayers.put(0, hiddenLayer);
+hiddenLayers.put(1, hiddenLayer1);
+NeuralNetwork neuralNetwork = new NeuralNetwork(inputLayer, hiddenLayers, outputLayer);
+// 打印结果
+System.out.println("神经网络层数: " + neuralNetwork.getSize());
+System.out.println("输入层结点：" + neuralNetwork.getInputLayer());
+System.out.println("隐藏层层数：" + neuralNetwork.getHiddenLayer().size());
+for (int i = 0; i < neuralNetwork.getHiddenLayer().size(); i++) {
+	System.out.println("隐藏层 " + i + neuralNetwork.getHiddenLayer().get(i));
+}
+System.out.println(neuralNetwork.getOutputLayer());
+</code>
+</pre>
+
+<p>
+	由代码可知，这种方法也可以创建神经网络。代码最后打印了相关信息。由打印部分的代码可知，为了便于查看我们创建的神经网络是否正确，我实现了神经层和神经元对象的toString()方法，这样便于我们的Debug。最后，输入的结果如下：
+</p>
+
+<pre>
+<code data-language="shell">
+神经网络层数: 4
+输入层结点：[0.25, -0.75, -0.45]
+隐藏层层数：2
+隐藏层 0：[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...]
+隐藏层 1：[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...]
+输出层： [0.0]
+</code>
+</pre>
+
+<h3>多标签数据arff的获取与设置</h3>
+
+<p>
+	mulan项目的两个数据文件为“.arff”文件和“.xml”文件。arff文件包括多标签数据的特征和标签声明，以及数据部分；xml文件为对应arff文件的标签声明。如下图所示
+	<br>
+	<center><img src="../asset/img/arff.png">
+	<div style="background-color: #ccc;width: 200px;">.arff文件</div></center><br>
+	<center><img src="../asset/img/xml.png">
+	<div style="background-color: #ccc;width: 200px;">.xml文件</div></center>
+</p>
+
+<p>
+	下面介绍arff数据的获取与写入文件
+</p>
+
+<h4>arff数据的获取</h4>
+
+<p>
+	arff数据对应的JAVA对象是ArffData，里面封装了arff相关的信息，例如：arff文件对应的非数据部分信息、arff数据部分和xml信息等。具体的获取代码仅需要一行，如下：
+</p>
+
+<pre>
+<code data-language="java">
+ArffData arffData = Features.getLocFeaArffData("sources/emotions.arff", 3, "walking");
+</code>
+</pre>
+<p>
+	通过读取arff文件信息，可以把它封装在arffData对象。这里仅仅是随意举得例子，上面的方法是对emotions.arff文件进行一些其他处理，然后封装在arffData对象中。方法最后一个参数具体什么意思，可以查找相应的文档或者API。
+</p>
+
+<h4>arff数据写入文件</h4>
+
+<p>
+	代码仅仅需要一行，如下：
+</p>
+
+<pre>
+<code data-language="java">
+MyFile.writeArffAndXml(arffData, "sources/emotion_localfeature.arff", "sources/emotion_localfeature.xml");
+</code>
+</pre>
+<p>
+	后面的两个参数为对应的文件路径。这里对arff数据仅做一个简单的介绍，具体详情请看相应文档或API。
+</p>
+
+<h3>mulan多标签分类实例</h3>
+<p>
+	这里举一个例子，在mulan网站上也可以找到。代码如下：
+</p>
+
+<pre>
+<code data-language="java">
+
+try {
+    // e.g. -arff emotions.arff
+    String arffFilename = Utils.getOption("arff", args); 
+    // e.g. -xml emotions.xml
+    String xmlFilename = Utils.getOption("xml", args);
+
+    System.out.println("Loading the dataset...");
+    MultiLabelInstances dataset = new MultiLabelInstances(arffFilename, xmlFilename);
+
+    RAkEL learner1 = new RAkEL(new LabelPowerset(new J48()));
+    MLkNN learner2 = new MLkNN();
+    BPMLL learner3 = new BPMLL();
+
+    Evaluator eval = new Evaluator();
+    MultipleEvaluation results;
+
+    int numFolds = 10;
+    results = eval.crossValidate(learner1, dataset, numFolds);
+    System.out.println(results);
+    results = eval.crossValidate(learner2, dataset, numFolds);
+    System.out.println(results);
+    results = eval.crossValidate(learner3, dataset, numFolds);
+    System.out.println(results);
+} catch (InvalidDataFormatException ex) {
+    Logger.getLogger(CrossValidationExperiment.class.getName()).log(Level.SEVERE, null, ex);
+} catch (Exception ex) {
+    Logger.getLogger(CrossValidationExperiment.class.getName()).log(Level.SEVERE, null, ex);
+}
+</code>
+</pre>
+
+<p>
+	代码中前面是读取文件路径，可能有的同学不知道怎么设置，这里我说一下，就是点击Run As --> Run Configurations，然后写入下图内容
+</p>
+
+<center><img src="../asset/img/run.png"></center><br>
+
+	<p>
+		实验采用是十折交叉验证，使用了三种多标签分类方法RAkEL、MLkNN和BPMLL进行预测。
+	</p>
+
+<div class="autoMenu" id="autoMenu" style="margin-right: 0px;margin-bottom: 0px;"></div>
+
+</div>
+
+	<script src="../asset/js/jquery-1.11.2.min.js"></script> 
+    <script src="../asset/js/rainbow.min.js"></script>
+    <script src="../asset/js/generic.js"></script>
+    <script src="../asset/js/java.js"></script>
+    <script src="../asset/js/shell.js"></script>
+    <script type="text/javascript" src="../asset/js/jquery.lettering.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#letter-container h2 a").lettering();
+		});
+	</script>
+
+
+<script src="../asset/js/jquery.autoMenu.js"></script> 
+<script>
+	$(function(){
+		 $('#autoMenu').autoMenu();
+	})
+	</script>
+</body>
+
+</html>

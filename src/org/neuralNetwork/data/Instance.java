@@ -4,14 +4,14 @@ import java.util.*;
 
 public class Instance {
 	
-	private List<List<Double>> allLine;
+	private Map<Integer, Map<Integer, Double>> allLine;
 	private int lineCount;
 
-	public List<List<Double>> getAllLine() {
+	public Map<Integer, Map<Integer, Double>> getAllLine() {
 		return allLine;
 	}
 
-	public void setAllLine(List<List<Double>> allLine) {
+	public void setAllLine(Map<Integer, Map<Integer, Double>> allLine) {
 		this.allLine = allLine;
 	}
 

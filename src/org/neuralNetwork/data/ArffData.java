@@ -4,6 +4,14 @@ public class ArffData {
 	private int labelCount;
 	private int attCount;
 	private Instance instance;
+	/**
+	 * arff文件非数据部分的文本，即数据前面的所有文本
+	 */
+	private String desIns;
+	/**
+	 * arff文件对应的xml文本
+	 */
+	private String xmlInf;
 	
 	public int getLabelCount() {
 		return labelCount;
@@ -22,6 +30,18 @@ public class ArffData {
 	}
 	public void setInstance(Instance instance) {
 		this.instance = instance;
+	}
+	public String getDesIns() {
+		return desIns;
+	}
+	public void setDesIns(String desIns) {
+		this.desIns = desIns;
+	}
+	public String getXmlInf() {
+		return xmlInf;
+	}
+	public void setXmlInf(String xmlInf) {
+		this.xmlInf = xmlInf;
 	}
 	
 	
