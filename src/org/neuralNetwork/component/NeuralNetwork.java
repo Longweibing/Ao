@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * 神经网络
  * 
- * @author Weibing Long</br>
+ * @author Weibing Long
  * @since 2017.11.24
  * 
  */

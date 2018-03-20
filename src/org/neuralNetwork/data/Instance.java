@@ -2,6 +2,11 @@ package org.neuralNetwork.data;
 
 import java.util.*;
 
+/**
+ * 封装arff的数据实例
+ * @author 龙卫兵
+ *
+ */
 public class Instance {
 	
 	private Map<Integer, Map<Integer, Double>> allLine;

@@ -2,7 +2,6 @@ package org.neuralNetwork.component;
 
 import java.util.*;
 
-
 /**
  * 神经层
  * @author Weibing Long

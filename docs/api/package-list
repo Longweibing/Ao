@@ -1,0 +1,6 @@
+org.dataStructure
+org.multiLabelClassification
+org.neuralNetwork.component
+org.neuralNetwork.data
+org.neuralNetwork.evaluation
+org.util

@@ -113,9 +113,9 @@ public class MyFile {
 
 	/**
 	 * 
-	 * @param arffData
-	 * @param arffFilePath
-	 * @param xmlFilePath
+	 * @param arffData arff数据对象
+	 * @param arffFilePath arff文件路径
+	 * @param xmlFilePath xml文件路径
 	 */
 	public static void writeArffAndXml(ArffData arffData, String arffFilePath, String xmlFilePath) {
 		List<String> list = new ArrayList<String>();

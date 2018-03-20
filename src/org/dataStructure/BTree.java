@@ -1,4 +1,10 @@
 package org.dataStructure;
+
+/**
+ * 二叉树
+ * @author 龙卫兵
+ *
+ */
 public class BTree {
 	@SuppressWarnings("unused")
 	private int[] bTree;

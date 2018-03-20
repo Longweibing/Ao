@@ -1,5 +1,6 @@
 package org.dataStructure;
 /**
+ * 队列，基于动态数组
 * @author 龙卫兵
 */
 public class Queue<Item> {

@@ -3,7 +3,7 @@ package org.neuralNetwork.component;
 /**
  * 神经层
  * 
- * @author Weibing Long</br>
+ * @author Weibing Long<br>
  * @since 2017.11.23
  * 
  */

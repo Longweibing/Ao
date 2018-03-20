@@ -1,5 +1,10 @@
 package org.neuralNetwork.data;
 
+/**
+ * arff数据对象
+ * @author 龙卫兵
+ *
+ */
 public class ArffData {
 	private int labelCount;
 	private int attCount;

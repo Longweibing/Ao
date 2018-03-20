@@ -16,18 +16,14 @@ public class neuralNetworks {
 	
 	/**
 	 * 前馈算法<hr>
-	 * 默认激活函数tanh，若自定义激活函数则自行修改本函数
 	 * @param layers 所有神经层
 	 * @param weights 所有权重值
 	 * @param bis 所有偏置值
-	 * @return
 	 */
-	public static void forward(Layer[] layers, Map<Integer, double[][]> weights, List<List<Double>> bis) {
-		
+	public static void forward(Layer[] layers, Map<Integer, double[][]> weights, List<List<Double>> bis) {	
 		for (int i = 0; i < layers.length; i++) {
 			if (i == 0) continue;
 			for (int j = 0; j < layers[i].size(); j++) {
-
 				double sum = 0;
 			    for (int z = 0; z < layers[i-1].size(); z++) {
 			    	sum += layers[i-1].getNeurals().get(z).getValue() * weights.get(i-1)[z][j];
@@ -38,7 +34,6 @@ public class neuralNetworks {
 			    layers[i].getNeurals().get(j).setValue(sum);
 			}
 		}
-		
 	}
 	
 	/**
@@ -47,6 +42,16 @@ public class neuralNetworks {
 	 * @param weights 所有权重值
 	 * @param bis 所有偏置值
 	 * @return
+	 */
+	
+	/**
+	 * 反向传播算法 <br>参考论文 <a href="http://download.csdn.net/download/github_37412255/10263517">《Multilabel Neural Networks with Applications to Functional Genomics and Text Categorization》</a>
+	 * @param layers 所有神经层
+	 * @param target 目标值
+	 * @param weights 所有权重值
+	 * @param bis 所有偏置值
+	 * @param flag 算法应用类型标记
+	 * @param alphe 学习率
 	 */
 	public static void backward(Layer[] layers, List<Double> target, Map<Integer, double[][]> weights, List<List<Double>> bis, String flag, double alphe) {
 		
@@ -165,16 +170,14 @@ public class neuralNetworks {
 			
 			if (i == 0) {
 				weights = new HashMap<Integer, double[][]>();
-				bis = new ArrayList<List<Double>>();
-				
+				bis = new ArrayList<List<Double>>();			
 				double[][] weight = new double[inputlayer.size()][outputlayer.size()];
 				for (int k = 0; k < inputlayer.size(); k++) {
 					for (int l = 0; l <outputlayer.size(); l++) {
 						weight[k][l] = 1;
 					}
 				}
-				weights.put(0, weight);
-				
+				weights.put(0, weight);				
 				for (int k = 0; k < layers.length-1; k++) {
 					List<Double> bi = new ArrayList<Double>();
 					for (int l = 0; l < layers[k].size(); l++) {
@@ -182,8 +185,7 @@ public class neuralNetworks {
 					}
 					bis.add(bi);		
 				}
-			}
-			
+			}		
 			neuralNetworks.forward(layers, weights, bis);
 			neuralNetworks.backward(layers, target, weights, bis, "multi-label", 0.5);
 		}
