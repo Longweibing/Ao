@@ -20,83 +20,42 @@
 				</h2>
 		</div>
 	
-	<h3>神经网络构建的构建</h3>
+	<h3>神经网络构建的构建</h3>	
 	<p>
-		神经网络的构建方法有两种，之所以有两种方法，是因为不同的算法输入参数类型不同。有的需要Java的集合类，有的需要神经网络对象NeuralNetwork。具体如下：
+		创建神经网络的代码如下：
 	</p>
-	<h4>方法一：神经层存入Java集合类</h4>
 <pre>
 <code data-language="java">
-// 构建神经网络
-//    1. 构建神经元
-Neural neural1 = new Neural(0.25);
-Neural neural2 = new Neural(-0.75);
-Neural neural3 = new Neural(-0.45);
-//    2. 构建神经层
-Layer inputLayer = new Layer();
-inputLayer.add(neural1);
-inputLayer.add(neural2);
-inputLayer.add(neural3);
-Layer hiddenLayer = new Layer(256);
-Layer hiddenLayer1 = new Layer(256);
-Layer outputLayer = new Layer(1);
-</code>
-</pre>
-	<p>
-	    上面的代码，神经元构造器的输入参数为double类型，神经层的输入参数为神经元个数，之后神经层添加神经元。这两个组件创建完毕，则神经网络骨架已经建立完成。对于具体的神经网络构建，则根据方法（如：前溃算法、反向传播算法等）的输入参数来作相应的组件封装。多啰嗦一句，当特征向量维数很大时，为了尽量少的写代码，可以将特征向量存入List对象中，通过遍历每一个值赋值到神经元中。 
-	</p>
-
-	<p>
-		上述代码构建的神经层，输入到Java集合类中，该集合类将作为构建完成后的神经网络。
-	</p>
-	
-	<h4>方法二：构建神经网络对象</h4>
-	<p>
-		将所有神经层输入到神经网络对象，也可以作为神经网络，完整代码如下：
-	</p>
-
-<pre>
-<code data-language="java">
-// 构建神经网络
-//	    1. 构建神经元
-Neural neural1 = new Neural(0.25);
-Neural neural2 = new Neural(-0.75);
-Neural neural3 = new Neural(-0.45);
-//	    2. 构建神经层
-Layer inputLayer = new Layer();
-inputLayer.add(neural1);
-inputLayer.add(neural2);
-inputLayer.add(neural3);
-Layer hiddenLayer = new Layer(256);
-Layer hiddenLayer1 = new Layer(256);
-Layer outputLayer = new Layer(1);
-Map< Integer,Layer> hiddenLayers = new HashMap< Integer,Layer>();
-hiddenLayers.put(0, hiddenLayer);
-hiddenLayers.put(1, hiddenLayer1);
-NeuralNetwork neuralNetwork = new NeuralNetwork(inputLayer, hiddenLayers, outputLayer);
-// 打印结果
-System.out.println("神经网络层数: " + neuralNetwork.getSize());
-System.out.println("输入层结点：" + neuralNetwork.getInputLayer());
-System.out.println("隐藏层层数：" + neuralNetwork.getHiddenLayer().size());
-for (int i = 0; i < neuralNetwork.getHiddenLayer().size(); i++) {
-	System.out.println("隐藏层 " + i + neuralNetwork.getHiddenLayer().get(i));
-}
-System.out.println(neuralNetwork.getOutputLayer());
+public static void main(String[] args) {
+	// 构建神经网络
+	NeuralNetwork nn = new NeuralNetwork(new int[] {2, 3, 10, 7, 6, 4, 5});
+	// 打印结果
+	System.out.println("神经网络层数: " + nn.getSize());
+	System.out.println("输入层结点：" + nn.getInputLayer());
+	System.out.println("隐藏层层数：" + nn.getHiddenLayer().size());
+	for (int i = 0; i < nn.getHiddenLayer().size(); i++) {
+		System.out.println("隐藏层 " + i + "：" + nn.getHiddenLayer().get(i));
+	}
+	System.out.println("输出层： " + nn.getOutputLayer());	
+}	
 </code>
 </pre>
 
 <p>
-	由代码可知，这种方法也可以创建神经网络。代码最后打印了相关信息。由打印部分的代码可知，为了便于查看我们创建的神经网络是否正确，我实现了神经层和神经元对象的toString()方法，这样便于我们的Debug。最后，输入的结果如下：
+	由代码可知，创建神经网络非常简单，仅需要往神经网络构造器传入一个int类型的数组即可，这个参数中的值为对应神经层的神经元个数。由打印部分的代码可知，为了便于查看我们创建的神经网络是否正确，我实现了神经层和神经元对象的toString()方法，这样便于我们的Debug。最后，输入的结果如下：
 </p>
 
 <pre>
 <code data-language="shell">
-神经网络层数: 4
-输入层结点：[0.25, -0.75, -0.45]
-隐藏层层数：2
-隐藏层 0：[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...]
-隐藏层 1：[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...]
-输出层： [0.0]
+神经网络层数: 7
+输入层结点：[0.0, 0.0]
+隐藏层层数：5
+隐藏层 0：[0.0, 0.0, 0.0]
+隐藏层 1：[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+隐藏层 2：[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+隐藏层 3：[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+隐藏层 4：[0.0, 0.0, 0.0, 0.0]
+输出层： [0.0, 0.0, 0.0, 0.0, 0.0]
 </code>
 </pre>
 

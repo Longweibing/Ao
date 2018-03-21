@@ -5,107 +5,142 @@ import java.util.*;
 /**
  * 神经网络
  * 
- * @author Weibing Long
+ * @author 龙卫兵
  * @since 2017.11.24
  * 
  */
 public class NeuralNetwork {
-
-	private final Layer inputLayer;
-	
+	/**
+	 * 输入层
+	 */
+	private Layer inputLayer;
+	/**
+	 * 隐藏层
+	 */
 	private final Map<Integer, Layer> hiddenLayers;
-	
+	/**
+	 * 输出层
+	 */
 	private final Layer outputLayer;
-	
+	/**
+	 * 输入层神经元个数
+	 */
 	private final int iSize;
-	
+	/**
+	 * 输出层神经元个数
+	 */
 	private final int oSize;
-	
+	/**
+	 * 隐藏层层数
+	 */
 	private final int hlSize;
-	
+	/**
+	 * 神经元层数
+	 */
 	private final int size;
 	
-	public NeuralNetwork(Layer inputLayer, Map<Integer, Layer> hiddenLayers, Layer outputLayer) {
-		if (null == inputLayer)
-			throw new NullPointerException("");
-		if (null == hiddenLayers)
-			throw new NullPointerException("");
-		if (null == outputLayer)
-			throw new NullPointerException("");
-		
-		this.inputLayer = inputLayer;
-		this.hiddenLayers = hiddenLayers;
-		this.outputLayer = outputLayer;
-		this.iSize = inputLayer.size();
-		this.hlSize = hiddenLayers.size();
-		this.oSize = outputLayer.size();
-		this.size = hiddenLayers.size() + 2;
+	/**
+	 * 创建神经网络
+	 * @param allLayer 神经网络拓扑，按顺序每个值分别为对应层的神经元个数
+	 */
+	public NeuralNetwork(int[] allLayer) {
+		// 创建输入层
+		this.inputLayer = new Layer(allLayer[0]);
+		this.iSize = allLayer[0];
+		// 创建隐藏层
+		hiddenLayers = new HashMap<Integer, Layer>();
+		for (int i = 1; i < allLayer.length - 1; i++) {
+			this.hiddenLayers.put(i-1, new Layer(allLayer[i]));
+		}
+		this.hlSize = allLayer.length - 2;
+		// 创建输出层
+		this.outputLayer = new Layer(allLayer[allLayer.length - 1]);
+		this.oSize = allLayer.length - 1;
+		// 神经网络层数
+		this.size = allLayer.length;
 	}
-
-	
+	/**
+	 * 获取输入层对象
+	 * @return 输入层对象
+	 */
 	public Layer getInputLayer() {
 		return inputLayer;
 	}
-
+	/**
+	 * 获取隐藏层对象
+	 * @return 隐藏层对象
+	 */
 	public Map<Integer, Layer> getHiddenLayer() {
 		return hiddenLayers;
 	}
-
+	/**
+	 * 获取输出层对象
+	 * @return 输出层对象
+	 */
 	public Layer getOutputLayer() {
 		return outputLayer;
 	}
-
-
+	/**
+	 * 获取输入层神经元个数
+	 * @return 输入层神经元个数
+	 */
 	public int getiSize() {
 		return iSize;
 	}
-
-
+	/**
+	 * 获取输出层神经元个数
+	 * @return 输出层神经元个数
+	 */
 	public int getoSize() {
 		return oSize;
 	}
-
-
+	/**
+	 * 获取隐藏层层数
+	 * @return 隐藏层层数
+	 */
 	public int getHlSize() {
 		return hlSize;
 	}
-
-
+	/**
+	 * 获取隐藏层
+	 * @return 隐藏层
+	 */
 	public Map<Integer, Layer> getHiddenLayers() {
 		return hiddenLayers;
 	}
-
-
+	/**
+	 * 获取神经元层数
+	 * @return 神经元层数
+	 */
 	public int getSize() {
 		return size;
 	}
-	
-	public static void main(String[] args) {
-		// 构建神经网络
-		//	    1. 构建神经元
-		Neural neural1 = new Neural(0.25);
-		Neural neural2 = new Neural(-0.75);
-		Neural neural3 = new Neural(-0.45);
-		//	    2. 构建神经层
-		Layer inputLayer = new Layer();
-		inputLayer.add(neural1);
-		inputLayer.add(neural2);
-		inputLayer.add(neural3);
-		Layer hiddenLayer = new Layer(256);
-		Layer hiddenLayer1 = new Layer(256);
-		Layer outputLayer = new Layer(1);
-		Map<Integer, Layer> hiddenLayers = new HashMap<Integer, Layer>();
-		hiddenLayers.put(0, hiddenLayer);
-		hiddenLayers.put(1, hiddenLayer1);
-		NeuralNetwork neuralNetwork = new NeuralNetwork(inputLayer, hiddenLayers, outputLayer);
-		// 打印结果
-		System.out.println("神经网络层数: " + neuralNetwork.getSize());
-		System.out.println("输入层结点：" + neuralNetwork.getInputLayer());
-		System.out.println("隐藏层层数：" + neuralNetwork.getHiddenLayer().size());
-		for (int i = 0; i < neuralNetwork.getHiddenLayer().size(); i++) {
-			System.out.println("隐藏层 " + i + "：" + neuralNetwork.getHiddenLayer().get(i));
+	/**
+	 * 设置输入层
+	 * @param input 输入层各神经元输入值
+	 */
+	public void setInputLayer(double[] input) {
+		Layer x = new Layer();
+		for (int i = 0; i < input.length; i++) {
+			x.add(new Neural(input[i]));
 		}
-		System.out.println("输出层： " + neuralNetwork.getOutputLayer());	
+		this.inputLayer = x;
+	}
+	
+	/**
+	 * 创建神经网络demo
+	 * @param args 字符串数组
+	 */
+	public static void main(String[] args) {
+		NeuralNetwork nn = new NeuralNetwork(new int[] {2, 3, 10, 7, 6, 4, 5});
+		// 打印结果
+		System.out.println("神经网络层数: " + nn.getSize());
+		System.out.println("输入层结点：" + nn.getInputLayer());
+		System.out.println("隐藏层层数：" + nn.getHiddenLayer().size());
+		for (int i = 0; i < nn.getHiddenLayer().size(); i++) {
+			System.out.println("隐藏层 " + i + "：" + nn.getHiddenLayer().get(i));
+		}
+		System.out.println("输出层： " + nn.getOutputLayer());	
 	}
 	
 }
