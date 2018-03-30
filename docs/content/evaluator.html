@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<link href="../asset/css/custom.css" rel="stylesheet" type="text/css">
+	<link href="../asset/css/rainbow.css" rel="stylesheet" type="text/css">
+	<link href="../asset/css/demo.css"  rel="stylesheet" type="text/css" />
+	<link href="../asset/css/style1.css"  rel="stylesheet" type="text/css" />
+	<link href="../asset/css/jquery.autoMenu.css" rel="stylesheet" />
+	<!--please add to your page for more beautiful-->
+	<link href="../asset/css/article.css" rel="stylesheet" />
+</head>
+<body id="pagefade" class="pagefade">
+	<div class="container">
+		<div id="letter-container" class="letter-container">
+				<h2>
+					<a href="#">评价指标</a>
+					<a href="#">评价指标</a>
+				</h2>
+		</div>
+	
+	<p>
+		多标签分类问题中，我们通过平均精确度、1错误、覆盖率等来衡量多标签分类算法的好坏。本文以多标签分类为例子，介绍常见的多标签评价指标。如果想具体了解它，也可以下载相关的论文来看，如：<a href="http://www.cs.princeton.edu/courses/archive/spr08/cos424/readings/SchapireSinger2000.pdf" style="color: blue">BoosTexter: A Boosting-based System for Text Categorization</a>。
+	</p>
+
+	<h3>1.Accuracy</h3>	
+	<p>
+		正确率衡量预测正确的标签所占比例情况，具体为每个实例正确标签所占比例与实例数的比例。当标签数为1，即为正确预测标签实例数与实例数的比例
+	</p>
+	<p>
+		实现正确率的代码如下：
+	</p>
+<pre>
+<code data-language="java">
+public static void main(String[] args) {
+	List< List< Double>> pracvals = new ArrayList< List< Double>>();
+	List< List< Double>> predvals = new ArrayList< List< Double>>();
+
+	// 读取预测标签值和实际标签值文件
+	List< String> list = MyFile.read("sources/labels/predict_value3");
+	List< String> list2 = MyFile.read("sources/labels/practice_value3");
+
+	// 添加排过序后的预测值
+	for (int i = 0; i < list.size(); i++) {
+		List< Double> temp = new ArrayList< Double>();
+		String[] lineLabel = list.get(i).split(" ");
+		for (String label : lineLabel) {
+			temp.add(Double.parseDouble(label.trim()));
+		}
+		predvals.add(temp);
+	}
+
+	// 添加实际值
+	for (int i = 0; i < list2.size(); i++) {
+		List< Double> temp = new ArrayList< Double>();
+		String[] lineLabel = list2.get(i).split(" ");
+		for (String label : lineLabel) {
+			temp.add(Double.parseDouble(label.trim()));
+		}
+		pracvals.add(temp);
+	}
+
+	//-----------精确度-----------------------------------------------------//
+	double p1 = Evaluator.accuracy(predvals, pracvals);
+	System.out.println("accuracy = " + p1);
+}
+</code>
+</pre>
+
+<p>
+	实验结果为：
+</p>
+
+<pre>
+<code data-language="shell">
+accuracy = 0.25
+</code>
+</pre>
+
+<h3>2.One-error</h3>
+
+<p>
+	1错误率，在多标签分类中指的是预测概率最高的标签的错误个数占总实例数的比例。
+</p>
+
+<p>
+	实现1错误率的代码如下：
+</p>
+<pre>
+<code data-language="java">
+	public static void main(String[] args) {
+		List< List< Double>> pracvals = new ArrayList< List< Double>>();
+		List< List< Double>> predvals = new ArrayList< List< Double>>();
+
+		// 读取预测标签值和实际标签值文件
+		List< String> list = MyFile.read("sources/labels/predict_value3");
+		List< String> list2 = MyFile.read("sources/labels/practice_value3");
+
+		// 添加排过序后的预测值
+		for (int i = 0; i < list.size(); i++) {
+			List< Double> temp = new ArrayList< Double>();
+			String[] lineLabel = list.get(i).split(" ");
+			for (String label : lineLabel) {
+				temp.add(Double.parseDouble(label.trim()));
+			}
+			predvals.add(temp);
+		}
+
+		// 添加实际值
+		for (int i = 0; i < list2.size(); i++) {
+			List< Double> temp = new ArrayList< Double>();
+			String[] lineLabel = list2.get(i).split(" ");
+			for (String label : lineLabel) {
+				temp.add(Double.parseDouble(label.trim()));
+			}
+			pracvals.add(temp);
+		}
+
+		//-----------One-error-----------------------------------------------------//
+		double p2 = Evaluator.oneError(predvals, pracvals);
+		System.out.println("oneError = " + p2);
+	}
+	 
+}
+</code>
+</pre>
+<p>
+	实验结果为：
+</p>
+<pre>
+<code data-language="shell">
+oneError = 0.5
+</code>
+</pre>
+
+<div class="autoMenu" id="autoMenu" style="margin-right: 0px;margin-bottom: 0px;"></div>
+
+</div>
+
+	<script src="../asset/js/jquery-1.11.2.min.js"></script> 
+    <script src="../asset/js/rainbow.min.js"></script>
+    <script src="../asset/js/generic.js"></script>
+    <script src="../asset/js/java.js"></script>
+    <script src="../asset/js/shell.js"></script>
+    <script type="text/javascript" src="../asset/js/jquery.lettering.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#letter-container h2 a").lettering();
+		});
+	</script>
+
+
+<script src="../asset/js/jquery.autoMenu.js"></script> 
+<script>
+	$(function(){
+		 $('#autoMenu').autoMenu();
+	})
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<link href="../../asset/css/custom.css" rel="stylesheet" type="text/css">
+	<link href="../../asset/css/rainbow.css" rel="stylesheet" type="text/css">
+	<link href="../../asset/css/jquery.autoMenu.css" rel="stylesheet" />
+	<style type="text/css">
+		body {
+			letter-spacing: 2pt;
+		}
+		h3 {
+			display: inline-block;
+			width: auto;
+			padding: 5px;
+			margin-top: 20px;
+		}
+
+		p {
+			color: #5C4D55;
+			font-size: 14px;
+			text-indent: 2em;
+			letter-spacing: 2pt;
+			line-height: 27px;
+			text-align: justify;
+			padding: 10px;
+
+			-webkit-transition: all 0.5s ease-in 0.5s;
+            -moz-transition: all 0.5s ease-in 0.5s;
+            -o-transition: all 0.5s ease-in 0.5s;
+            transition: all 0.5s ease-in 0.5s;
+		}
+		p:hover {
+			/*延时渐变*/
+			-webkit-transition: all 1s ease-out 1s;
+            -moz-transition: all 1s ease-out 1s;
+            -o-transition: all 1s ease-out 1s;
+            transition: all 1s ease-out 1s;
+
+			background-color: #389d99;
+			color: #fff;
+		}
+
+	</style>
+</head>
+<body id="pagefade" class="pagefade">
+
+<div style="background-color: #3fb0ac;height:300px;line-height:300px;"><h1 style="height: 50%; color: #fff;text-align: center;">决策树</h1></div>
+<h3>决策树概念</h3>
+
+<p>
+	决策树是一种机器学习算法，主要用于回归和分类问题。在分类问题中，它直接能解决的是每个特征为离散值的二分类问题。如果特征的取值连续，则决策树的特征分支难于控制，使得其结果可能过于复杂，而且对于新数据，可能没有分支可以进入。所以说，要应用决策树来进行分类，则特征的所有情况都可以提前被预测。
+</p>
+
+<h3>决策树结构特点</h3>
+
+<p>
+	决策树的非叶子节点为特征名，叶子节点为二分类结果的具体某个值。如果二分类结果取值为{是，否}，则叶子节点为“是”或者“否”。树枝为特征的取值。因此从决策树的根节点开始从第一个特征判断，一直等到叶子节点，则判断出二分类结果。
+</p>
+
+
+<div class="autoMenu" id="autoMenu" style="margin-right: 0px;margin-bottom: 0px;"></div>
+
+
+	<script src="../../asset/js/jquery-1.11.2.min.js"></script> 
+    <script src="../../asset/js/rainbow.min.js"></script>
+    <script src="../../asset/js/generic.js"></script>
+    <script src="../../asset/js/java.js"></script>
+    <script src="../../asset/js/shell.js"></script>
+    <script type="text/javascript" src="../../asset/js/jquery.lettering.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#letter-container h2 a").lettering();
+		});
+	</script>
+
+
+<script src="../../asset/js/jquery.autoMenu.js"></script> 
+<script>
+	$(function(){
+		 $('#autoMenu').autoMenu();
+	})
+	</script>
+</body>
+
+</html>

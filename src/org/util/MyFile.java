@@ -101,9 +101,7 @@ public class MyFile {
 			allLine.put(n++, line);
 		}
 		
-		Instance instance = new Instance();
-		instance.setAllLine(allLine);
-		instance.setLineCount(allLine.size());
+		Instance instance = new Instance(allLine, allLine.size());
 		arffData.setInstance(instance);
 		arffData.setAttCount(attCount);
 		arffData.setLabelCount(labelCount);
@@ -160,7 +158,7 @@ public class MyFile {
 //			Map<Integer, Double> theLine = allLine.get(i);
 //			System.out.println(theLine);
 //		}
-		ArffData arffData = Features.getLocFeaArffData("sources/emotions.arff", 3, "walking");
+		ArffData arffData = Extractor.getArffDataLocFea("sources/emotions.arff", 3, "walking");
 		MyFile.writeArffAndXml(arffData, "sources/emotion_localfeature.arff", "sources/emotion_localfeature.xml");
 	}
 }

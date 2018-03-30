@@ -8,7 +8,7 @@ import java.util.*;
  * @author 龙卫兵
  *
  */
-public class Features {
+public class Extractor {
 	
 	/**
 	 * 2018.3.16
@@ -17,7 +17,7 @@ public class Features {
 	 * @param way 滑动方式：1.游动 2.切分
 	 * @return arffData对象
 	 */
-	public static ArffData getLocFeaArffData(String filePath, int winSize, String way) {
+	public static ArffData getArffDataLocFea(String filePath, int winSize, String way) {
 		ArffData arffData = null;
 		
 		// 加载实例
@@ -76,9 +76,8 @@ public class Features {
 				listlist.put(i, list);
 				
 			}	
-			
-			instance.setAllLine(listlist);
-			arffData.setInstance(instance);
+			Instance instanceLocal = new Instance(listlist, listlist.size());
+			arffData.setInstance(instanceLocal);
 			arffData.setLabelCount(labelCount);
 			arffData.setAttCount(n);
 			arffData.setDesIns(desIns);
@@ -94,7 +93,7 @@ public class Features {
 	}
 	
 	public static void main(String[] args) {
-		ArffData arffData = Features.getLocFeaArffData("sources/emotions.arff", 2, "walking");
+		ArffData arffData = Extractor.getArffDataLocFea("sources/emotions.arff", 2, "walking");
 		System.out.println(arffData.getDesIns());
 	}
 }
