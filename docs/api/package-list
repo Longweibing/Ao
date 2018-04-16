@@ -1,6 +1,9 @@
-org.dataStructure
-org.multiLabelClassification
-org.neuralNetwork.component
-org.neuralNetwork.data
-org.neuralNetwork.evaluation
+org.multilabel
+org.multithread
+org.nn.component
+org.nn.data
+org.nn.evaluation
 org.util
+org.util.ds
+org.util.search
+org.util.sort
