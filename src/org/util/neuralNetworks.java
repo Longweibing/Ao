@@ -1,9 +1,10 @@
 package org.util;
 
 import java.util.*;
-import org.neuralNetwork.component.*;
-import org.neuralNetwork.data.ArffData;
-import org.neuralNetwork.data.Instance;
+
+import org.nn.component.*;
+import org.nn.data.ArffData;
+import org.nn.data.Instance;
 
 /**
  * 神经网络相关算法

@@ -1,7 +1,8 @@
 package org.util;
 
 import java.util.List;
-import org.neuralNetwork.component.Neural;
+
+import org.nn.component.Neural;
 
 /**
  * 标准化

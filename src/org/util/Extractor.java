@@ -1,8 +1,8 @@
 package org.util;
 
-import org.neuralNetwork.data.*;
-
 import java.util.*;
+
+import org.nn.data.*;
 /**
  * 提取特征的工具类
  * @author 龙卫兵
@@ -93,7 +93,7 @@ public class Extractor {
 	}
 	
 	public static void main(String[] args) {
-		ArffData arffData = Extractor.getArffDataLocFea("sources/emotions.arff", 2, "walking");
+		ArffData arffData = Extractor.getArffDataLocFea("sources/data/multi-label/yeast/yeast.arff", 2, "walking");
 		System.out.println(arffData.getDesIns());
 	}
 }

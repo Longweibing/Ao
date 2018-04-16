@@ -3,8 +3,8 @@ package org.util;
 import java.io.*;
 import java.util.*;
 
-import org.neuralNetwork.data.ArffData;
-import org.neuralNetwork.data.Instance;
+import org.nn.data.ArffData;
+import org.nn.data.Instance;
 
 public class MyFile {	
 	private MyFile() {		
@@ -158,7 +158,11 @@ public class MyFile {
 //			Map<Integer, Double> theLine = allLine.get(i);
 //			System.out.println(theLine);
 //		}
-		ArffData arffData = Extractor.getArffDataLocFea("sources/emotions.arff", 3, "walking");
-		MyFile.writeArffAndXml(arffData, "sources/emotion_localfeature.arff", "sources/emotion_localfeature.xml");
+		
+		// 获取多标签数据局部特征并保存到本地
+		ArffData arffData = Extractor.getArffDataLocFea("sources/data/multi-label/yeast/yeast_w222localfeature.arff", 2, "walking");
+		String arffPath = "sources/data/multi-label/yeast/yeast_w2222localfeature.arff";
+		String xmlPath = "sources/data/multi-label/yeast/yeast_w2222localfeature.xml";
+		MyFile.writeArffAndXml(arffData, arffPath, xmlPath);
 	}
 }
