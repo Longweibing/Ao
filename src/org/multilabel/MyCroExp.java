@@ -40,7 +40,7 @@ public class MyCroExp {
 //            RAkEL learner1 = new RAkEL(new LabelPowerset(new J48()));
 //            MLkNN learner2 = new MLkNN();
 //            BPMLL learner3 = new BPMLL();
-            DNNMLL dNNMLL = new DNNMLL();
+            BPxMLL learner4 = new BPxMLL();
 
             Evaluator eval = new Evaluator();
             MultipleEvaluation results;
@@ -52,7 +52,7 @@ public class MyCroExp {
 //            System.out.println(results);
 //            results = eval.crossValidate(learner3, dataset, numFolds);
 //            System.out.println(results);
-            results = eval.crossValidate(dNNMLL, dataset, numFolds);
+            results = eval.crossValidate(learner4, dataset, numFolds);
             System.out.println(results);
         } catch (InvalidDataFormatException ex) {
             Logger.getLogger(CrossValidationExperiment.class.getName()).log(Level.SEVERE, null, ex);

@@ -6,5 +6,7 @@ package org.util.ds;
  *
  */
 public class HFTree {
-
+    public static void mian(String[] args) {
+        
+    }
 }

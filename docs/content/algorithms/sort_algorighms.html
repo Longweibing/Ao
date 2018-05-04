@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<link href="../../asset/css/custom.css" rel="stylesheet" type="text/css">
+	<link href="../../asset/css/rainbow.css" rel="stylesheet" type="text/css">
+	<link href="../../asset/css/jquery.autoMenu.css" rel="stylesheet" />
+	<style type="text/css">
+		body {
+			letter-spacing: 2pt;
+		}
+		h3 {
+			display: inline-block;
+			width: auto;
+			padding: 5px;
+			margin-top: 20px;
+		}
+
+		p {
+			color: #5C4D55;
+			font-size: 14px;
+			text-indent: 2em;
+			letter-spacing: 2pt;
+			line-height: 27px;
+			text-align: justify;
+			padding: 10px;
+
+			-webkit-transition: all 0.2s ease-in;
+            -moz-transition: all 0.2s ease-in;
+            -o-transition: all 0.2s ease-in;
+            transition: all 0.2s ease-in;
+		}
+		p:hover {
+			/*延时渐变*/
+			-webkit-transition: all 0.2s ease-out;
+            -moz-transition: all 0.2s ease-out;
+            -o-transition: all 0.2s ease-out;
+            transition: all 0.2s ease-out;
+
+			background-color: #eaeaea;
+		}
+
+	</style>
+</head>
+<body id="pagefade" class="pagefade">
+
+<div style="background-color: #3fb0ac;height:300px;line-height:300px;"><h1 style="height: 50%; color: #fff;text-align: center;">排序算法</h1></div>
+<p>代码为java实现，基于int[]。升序排序 。本文所使用的动态图是维基百科上获取的</p>
+<img src="../../asset/img/sort1.png">
+<h3>1. 插入排序算法</h3>
+
+<p>插入排序，会产生临时数组，空间复杂度与待排序数组元素个数成正比，时间复杂度与n平方成正比。</p>
+
+<img src="../../asset/img/sort2.gif">
+<p>代码实现：先定义接口：</p>
+
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 对int类型数组排序
+ * @author Weibing Long
+ * @since 2018.4.12
+ */
+public interface Sort {
+    void sort(int[] x);
+}
+</code>
+</pre>
+<p>然后定义插入排序：</p>
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 插入排序，会产生临时数组，空间复杂度与待排序数组元素个数成正比，时间复杂度与n平方成正比。
+ * @author Weibing Long
+ * @since 2018.04.13
+ */
+public class InsertSort implements Sort {
+
+    public static void main(String args[]) {
+        Sort insertSort = new InsertSort();
+        int[] x = new int[] {
+            100, 40, 60, 87, 34, 11, 56, 0, 2, 57, 50, 40, 34
+        };
+        insertSort.sort(x);
+        for (int value : x) {
+            System.out.print(value + "  ");
+        }
+    }
+
+    @Override
+    public void sort(int[] x) {
+        int[] y = new int[x.length];
+        y[0] = x[0];
+        for (int i = 1, j = 0; i < x.length; i++, j++) {
+            for (int k = 0; k < j + 1; k++) {
+                if (x[i] < y[k]) {
+                    int temp = x[i];
+                    x[i] = y[k];
+                    y[k] = temp;            
+                }
+            }
+            y[j + 1] = x[i];
+        }
+        for (int i = 0; i < x.length; i++) {
+            x[i] = y[i];
+        }
+    }
+
+}
+</code>
+</pre>
+
+<h3>2. 希尔排序</h3>
+
+<p>稍微改善了插入排序，为啥叫希尔排序呢？</p>
+
+<p>—- 我叫希尔，排序是我写的。有毛病吗？ </p>
+<img src="../../asset/img/sort3.gif">
+<p>算法实现：先定义接口：</p>
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 对int类型数组排序
+ * @author Weibing Long
+ * @since 2018.4.12
+ */
+public interface Sort {
+    void sort(int[] x);
+}
+</code>
+</pre>
+<p>再实现接口：</p>
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 希尔排序。（为啥叫希尔排序呢？---- 我叫希尔，排序是我写的。有毛病吗？）
+ * @author Weibing Long
+ * @since 2018.04.13
+ */
+public class ShellSort implements Sort {
+
+    public static void main(String[] args) {
+        Sort shellSort = new ShellSort();
+        int[] x = new int[] {
+            100, 40, 60, 87, 34, 11, 56, 0, 2, 57, 50, 40, 34
+        };
+        shellSort.sort(x);
+        for (int value : x) {
+            System.out.print(value + "  ");
+        }
+    }
+
+    @Override
+    public void sort(int[] x) {
+        int stepSize = x.length / 3;  // 步子大小
+        // 每一次循环就是一趟排序
+        while (stepSize >= 1) {
+            for (int i = 0; i < stepSize; i++) {
+                int n = 0;
+                // 计算待比较元素的个数，为了确定临时数组长度
+                for (int j = i; j < x.length; j = j + stepSize)
+                    n++;
+                int[] temp = new int[n];
+                for (int j = i, k = 0; j < x.length; j = j + stepSize, k++) {
+                    temp[k] = x[j];
+                }
+                // 对元素进行插入排序
+                Sort insertSort = new InsertSort();
+                insertSort.sort(temp);
+                for (int j = i, k = 0; j < x.length; j = j + stepSize, k++) {
+                    x[j] = temp[k];
+                }
+            }
+            stepSize--;  // 步子减一
+        }
+    }
+}
+</code>
+</pre>
+
+<h3>3. 冒泡排序算法</h3>
+
+<p>第一趟遍历将数组中最大值放到最后。第二趟将第二大的数放到倒数第二的位置。。。。时间复杂度与n平方成正比。</p>
+
+<img src="../../asset/img/sort4.gif">
+<p>代码实现：先定义接口：</p>
+
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 对int类型数组排序
+ * @author Weibing Long
+ * @since 2018.4.12
+ */
+public interface Sort {
+    void sort(int[] x);
+}
+</code>
+</pre>
+<p>然后实现接口：</p>
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 冒泡排序：时间复杂度与n平方成正比
+ * @author Weibing Long
+ * @since 2018.04.13
+ */
+public class BubbleSort implements Sort {
+
+    public static void main(String[] args) {
+        Sort bubbleSort = new BubbleSort();
+        int[] x = new int[] {
+                100, 40, 60, 87, 34, 11, 56, 0, 2, 57, 50, 40, 34
+            };
+        bubbleSort.sort(x);
+        for (int value : x) {
+            System.out.print(value + "  ");
+        }
+    }
+
+    @Override
+    public void sort(int[] x) {
+        for (int i = 0; i < x.length; i++) {
+            for (int j = i + 1; j < x.length; j++) {
+                if (x[i] > x[j]) {
+                    swap(x, i, j);
+                }
+            }
+        }
+    }
+
+    // 交换元素
+    private void swap(int[] x, int i, int j) {
+        int temp = x[i];
+        x[i] = x[j];
+        x[j] = temp;            
+    }
+
+}
+</code>
+</pre>
+
+<h3>4. 快速排序算法</h3>
+
+<p>快速排序。它是一种基于交换排序的排序算法，目前公认最好的排序算法。发明者是C. A. R. Hoare</p>
+<p>算法思想：第一个元素作为基准，将大于它的元素排在右边，小于它的元素排在左边。然后用同样的方式对左右两边的数据进行整理，直到只剩两个元素的比较为止。比较两个元素，将小的排在左边。该算法涉及到分治思想和递归思想。 </p>
+
+<img src="../../asset/img/sort5.gif">
+<p>算法实现：代码为Java，首先设计了一个排序接口，</p>
+
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 对int类型数组排序
+ * @author Weibing Long
+ * @since 2018.4.12
+ */
+public interface Sort {
+    void sort(int[] x);
+}
+</code>
+</pre>
+<p>然后实现快速排序</p>
+<pre>
+<code data-language="java">
+/**
+ * 快速排序。它是一种基于交换排序的排序算法，目前公认最好的排序算法。发明者是C. A. R. Hoare<hr>
+ * 算法思想：第一个元素作为基准，将大于它的元素排在右边，小于它的元素
+ *           排在左边。然后用同样的方式对左右两边的数据进行整理，直到只剩两个元素的比较为止。
+ *           比较两个元素，将小的排在左边。<br>
+ *           
+ *           该算法涉及到分治思想和递归思想。
+ * @author Weibing Long
+ *
+ */
+public class QuickSort implements Sort {
+
+    public static void main(String[] args) {
+        QuickSort quickSort = new QuickSort();
+        int[] x = new int[] {
+                100, 40, 60, 87, 34, 11, 56, 0,2, 57, 50,40,34
+        };
+        quickSort.sort(x);
+        for (int i = 0; i < x.length; i++) {
+            System.out.print(x[i] + "  ");
+        }
+    }
+
+    @Override
+    public void sort(int[] x) {
+        sort(x, 0, x.length - 1);
+    }
+
+    private void sort(int[] x, int low, int high) {
+        if (low >= high)
+            return;
+        // x在low和high指定的范围元素仅两个
+        if (high - low == 1) {
+            if (x[low] > x[high])
+                swap(x, low, high);
+            return;
+        }
+
+        int pivot = x[low];  // 基准元素
+        int left = low + 1;
+        int right = high;
+        while (left < right) {
+            while (left < right && left <= high) {
+                if (x[left] > pivot)
+                    break;
+                left++;
+            }
+
+            while (left <= right && right > low) {
+                if (x[right] < pivot)
+                    break;
+                right--;
+            }
+
+            if (left < right)
+                swap(x, left, right);
+        }
+        swap(x, low, right);
+        sort(x, low, right - 1);
+        sort(x, right + 1, high);
+    }
+
+    // 交换数组在left和right处两个元素的值
+    private void swap(int[] x, int left, int right) {
+        int temp = x[left];
+        x[left] = x[right];
+        x[right] = temp;
+    }
+
+}
+</code>
+</pre>
+<p>实验中对于 ‘left <= right && right > low’ 条件，我忘记写等号导致出错。</p>
+
+<p>对于递归调用的函数，在函数开头一定要写入口检查，这是终止递归调用的关键。</p>
+
+<p>实验结果：0 2 11 34 34 40 40 50 56 57 60 87 100</p>
+<h3>5. 选择排序</h3>
+
+<p>选择排序：一趟遍历将最小的数记录下来，然后与第一个元素交换位置。 </p>
+<p>(注意与冒泡排序的区别，最坏情况下，虽然时间复杂度一样N平方，但是选择排序更有效) </p>
+
+<img src="../../asset/img/sort6.gif">
+<p>先定义接口：</p>
+
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 对int类型数组排序
+ * @author Weibing Long
+ * @since 2018.4.12
+ */
+public interface Sort {
+    void sort(int[] x);
+}
+</code>
+</pre>
+<p>然后实现接口：</p>
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 选择排序：一趟遍历将最小的数记录下来，然后与第一个元素交换位置。
+ * (注意与冒泡排序的区别，最坏情况下，虽然时间复杂度一样N平方，但是选择排序更有效)
+ * 这里理解如有错误，欢迎指正！
+ * @author Weibing Long
+ * @since 2018.04.14
+ */
+public class SelectSort implements Sort {
+
+    public static void main(String[] args) {
+        Sort selectSort = new SelectSort();
+        int[] x = new int[] {
+            100, 40, 60, 87, 34, 11, 56, 0, 2, 57, 50, 40, 34
+        };
+        selectSort.sort(x);
+        for (int value : x) {
+            System.out.print(value + "  ");
+        }
+    }
+
+    @Override
+    public void sort(int[] x) {     
+        for (int i = 0; i < x.length; i++) {
+            int min = i;
+            for (int j = i + 1; j < x.length; j++) {
+                if (x[j] < x[min]) {
+                    min = j;
+                }
+            }
+            if (min != i)
+                swap(x, min, i);
+        }   
+    }
+
+    private void swap(int[] x, int i, int j) {
+        int temp = x[i];
+        x[i] = x[j];
+        x[j] = temp;
+    }
+}
+</code>
+</pre>
+
+<h3>6. 堆排序算法</h3>
+
+<p>堆排序，基于选择排序（基本操作是选择，或者理解为时间主要花费在选择操作）。</p>
+<p>对于给定的int类型数组，首先将它组织为最大堆（堆是一种数据结构，数据结构就是数据的组织方式。最大堆满足：是一个完全二叉树，而且父节点比直接左右子树节点值大。）然后将最后一个元素与第一个元素交换。这是一次迭代。</p>
+<p>第二次的时候，组织最大堆的时候，不包括最后一个元素，因为它的位置已经确定了。第二次迭代再将第一个元素与倒数第二个元素交换位置。
+以此类推。 </p>
+
+<img src="../../asset/img/sort7.gif">
+<p>先定义接口：</p>
+
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 对int类型数组排序
+ * @author Weibing Long
+ * @since 2018.4.12
+ */
+public interface Sort {
+    void sort(int[] x);
+}
+</code>
+</pre>
+<p>然后实现接口：</p>
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 堆排序，基于选择排序（基本操作是选择，或者理解为时间主要花费在选择操作）。
+ * 对于给定的int类型数组，首先将它组织为最大堆（堆是一种数据结构，数据结构就是数据的组织方式。最大堆满足：是一个完全二叉树，而且父节点比直接左右子树节点值大。）
+ * 然后将最后一个元素与第一个元素交换。这是一次迭代。第二次的时候，组织最大堆的时候，不包括最后一个元素，因为它的位置已经确定了。
+ * 第二次迭代再将第一个元素与倒数第二个元素交换位置，以此类推。
+ * @author Weibing Long
+ * @since 2018.04.15
+ */
+public class HeapSort implements Sort {
+
+    public static void main(String[] args) {
+        Sort heapSort = new HeapSort();
+        int[] x = new int[] {
+            100, 40, 60, 87, 34, 11, 56, 0, 2, 57, 50, 40, 34
+        };
+        heapSort.sort(x);
+        for (int value : x) {
+            System.out.print(value + "  ");
+        }
+    }
+
+    @Override
+    public void sort(int[] x) {
+        // 从后往前，将最大的值依次赋值
+        for (int i = x.length - 1, j = 0; i > 0; i--, j++) {
+            // 建大顶堆
+            int y = 0;
+            // 当前节点左右子树都存在
+            while (2 * y + 2 < x.length - j) {
+                int maxIndex = y;
+                if (x[maxIndex] < x[2 * y + 1])
+                    maxIndex = 2 * y + 1;
+                if (x[maxIndex] < x[2 * y + 2])
+                    maxIndex = 2 * y + 2;
+                // 使父节点最大
+                if (maxIndex != y) {
+                    swap(x, maxIndex, y);
+                    backtrace(x, y);
+                }
+                y++;
+            }
+            // 当前节点存在左子树，不存在右子树，而且做子树节点值更大。
+            if (2 * y + 1 < x.length - j && x[y] < x[2 * y + 1]) {
+                swap(x, 2 * y + 1, y);
+                backtrace(x, y);
+            }
+            //交换元素
+            swap(x, i, 0);
+        }
+
+    }
+
+    // 交换元素
+    private void swap(int[] x, int i, int j) {
+        int temp = x[i];
+        x[i] = x[j];
+        x[j] = temp;
+    }
+
+    // 回溯操作，主要是从当前索引curindex开始，将较大的值从父节点一直传送到根节点。
+    private void backtrace(int[] x, int curindex) {
+        int i1 = curindex;
+        int i2 = (i1 - 1) / 2;
+        while (i2 >= 0 && x[i1] > x[i2]) {
+            swap(x, i1, i2);
+            i1 = i2;
+            i2 = (i1 - 1) / 2;
+            if (i1 == 0) break;
+        }
+    }
+}
+</code>
+</pre>
+
+<h3>7. 归并排序算法</h3>
+
+<p>归并排序：此算法与快速排序有些类似，运行效率也很好，但是需要额外的空间。</p>
+<p>此外，归并对半后，分别排序，然后合并数组。而快速排序对半的依据是某个元素。</p>
+
+<img src="../../asset/img/sort8.gif">
+<p>先定义接口：</p>
+
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 对int类型数组排序
+ * @author Weibing Long
+ * @since 2018.4.12
+ */
+public interface Sort {
+    void sort(int[] x);
+}
+</code>
+</pre>
+<p>然后实现接口：</p>
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 归并排序：此算法与快速排序有些类似，运行效率也很好，但是需要额外的空间。
+ * 此外，归并对半后，分别排序，然后合并数组。而快速排序对半的依据是某个元素。
+ * @author Weibing Long
+ * @since 2018.04.15
+ */
+public class MergeSort implements Sort {
+
+    public static void main(String[] args) {
+        Sort mergetSort = new MergeSort();
+        int[] x = new int[] {
+            100, 40, 60, 87, 34, 11, 56, 0, 2, 57, 50, 40, 34
+        };
+        mergetSort.sort(x);
+        for (int value : x) {
+            System.out.print(value + "  ");
+        }
+    }
+
+    @Override
+    public void sort(int[] x) {
+        sort(x, 0, x.length - 1);
+    }
+
+    private void sort(int[] x, int low, int high) {
+        if (high - low == 0)
+            return;
+        if (high - low == 1) {
+            if (x[low] > x[high])
+                swap(x, low, high);
+            return;
+        }
+        long sum = low + high;
+        int middle = (int)(sum / 2);
+        sort(x, low, middle);
+        sort(x, middle + 1, high);
+        merge(x, low, high);
+    }
+
+    private void merge(int[] x, int low, int high) {
+        int n = high - low + 1;
+        int[] temp = new int[n];
+        long sum = low + high;
+        int mid = (int)(sum / 2), left = low, right = mid + 1, i = 0;
+        while (left <= mid && right <= high) {
+            if (x[left] <= x[right]) temp[i++] = x[left++];
+            else temp[i++] = x[right++];
+        }
+        if (left > mid)
+            while (right <= high) temp[i++] = x[right++];
+        if (right > high)
+            while (left <= mid) temp[i++] = x[left++];
+        int index = 0;
+        for (i = low; i <= high; i++, index++)
+            x[i] = temp[index]; 
+    }
+
+    private void swap(int[] x, int i, int j) {
+        int temp = x[i];
+        x[i] = x[j];
+        x[j] = temp;
+    }
+}
+</code>
+</pre>
+
+<h3>8. 基数排序算法</h3>
+
+<p>基数排序：基于桶排序，从个位、十位、百位。。。。。。迭代，每次迭代的时候，如果某位是5，就存入对应的0到9中的编号为5的桶中，然后依次重新放入原数组中。终止条件为所有的数都存入编号为0的桶中，即都超过了最高位。</p>
+<p>实现细节：针对可能存在负数，所以先找出原数组中最小的数，然后将所有的数都加上该数的绝对值后再求对应位的数，这样保证了负数为自然数，而且它们与正数的相对关系不发生变化。 </p>
+
+<img src="../../asset/img/sort9.gif">
+<p>先定义接口：</p>
+
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+/**
+ * 对int类型数组排序
+ * @author Weibing Long
+ * @since 2018.4.12
+ */
+public interface Sort {
+    void sort(int[] x);
+}
+</code>
+</pre>
+<p>具体代码体现在这里：((x[i] + Math.abs(minvalue)) / offset) % 10 </p>
+<p>然后实现接口：</p>
+<pre>
+<code data-language="java">
+package org.util.sort;
+
+import java.util.*;
+
+/**
+ * 基数排序：基于桶排序，从个位、十位、百位。。。。。。迭代，每次迭代的时候，
+ * 如果某位是5，就存入对应的0到9中的编号为5的桶中，然后依次重新放入原数组中。终止条件为所有的数
+ * 都超过了最高位。
+ * 实现细节：针对可能存在负数，所以先找出原数组中最小的数，然后将所有的数都加上该数的绝对值后
+ * 再求对应位的数，这样保证了负数为自然数，而且它们与正数的相对关系不发生变化。具体代码体现在
+ * 这里：((x[i] + Math.abs(minvalue)) / offset) % 10
+ * @author Weibing Long
+ * @since 2018.04.16
+ */
+public class RadixSort implements Sort {
+    // 创建从0到9的十个桶
+    private static final Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
+    static {
+        for (int i = 0; i < 10; i++)
+            map.put(i, new ArrayList<Integer>());
+    }
+
+    public static void main(String[] args) {
+        Sort radixSort = new RadixSort();
+        int[] x = new int[] {
+            100, 40, 60, 87, 34, 11, 56, 0, 2, 57, 50, 40, 34
+        };
+        radixSort.sort(x);
+        for (int i = 0; i < x.length; i++) {
+            System.out.print(x[i] + "  ");
+        }
+    }
+
+    @Override
+    public void sort(int[] x) {
+        sort(x, 1);
+    }
+
+    private void sort(int[] x, long offset) {
+        int minvalue = min(x);
+        // 填桶
+        for (int i = 0; i < x.length; i++) {
+            // (x[i] + Math.abs(minvalue)) 保证所有的数都为正数，而且相对大小不变
+            long sum = (((long)x[i] + (long)Math.abs(minvalue)) / offset);  // 防止溢出
+            map.get((int)(sum % 10)).add(i);
+        }
+        offset *= 10;
+        // 终止条件
+        long max = ((long)Math.abs(minvalue) + max(x)) * 10;
+        if (max < offset)
+            return;
+        else {
+            int[] temp = new int[x.length];
+            int m = 0;
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < map.get(i).size(); j++) {
+                    temp[m++] = x[map.get(i).get(j)]; 
+                }
+            }
+            for (int i = 0; i < x.length; i++) {
+                x[i] = temp[i];
+            }
+            for (int i = 0; i < map.size(); i++) {
+                map.get(i).clear();
+            }
+            sort(x, offset);
+        }
+    }
+
+    // 求数组中最小的数
+    private int min(int[] x) {
+        int min = Integer.MAX_VALUE;
+        for (int value : x) {
+            if (min > value)
+                min = value;
+        }
+        return min;
+    }
+    // 求数组中最小的数
+    private int max(int[] x) {
+        int max = Integer.MIN_VALUE;
+        for (int value : x) {
+            if (max < value)
+                max = value;
+        }
+        return max;
+    }
+}
+</code>
+</pre>
+<p>谨防溢出</p>
+
+<p>版权声明：转载请注明出处	https://blog.csdn.net/github_37412255/article/details/54731005</p>
+
+
+
+<div class="autoMenu" id="autoMenu" style="margin-right: 0px;margin-bottom: 0px;"></div>
+
+
+	<script src="../../asset/js/jquery-1.11.2.min.js"></script> 
+    <script src="../../asset/js/rainbow.min.js"></script>
+    <script src="../../asset/js/generic.js"></script>
+    <script src="../../asset/js/java.js"></script>
+    <script src="../../asset/js/shell.js"></script>
+    <script type="text/javascript" src="../../asset/js/jquery.lettering.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#letter-container h2 a").lettering();
+		});
+	</script>
+
+
+<script src="../../asset/js/jquery.autoMenu.js"></script> 
+<script>
+	$(function(){
+		 $('#autoMenu').autoMenu();
+	})
+	</script>
+</body>
+
+</html>

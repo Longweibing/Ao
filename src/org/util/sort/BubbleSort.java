@@ -1,5 +1,7 @@
 package org.util.sort;
 
+import java.util.Random;
+
 /**
  * 冒泡排序：时间复杂度与n平方成正比
  * @author Weibing Long
@@ -9,9 +11,10 @@ public class BubbleSort implements Sort {
 	
 	public static void main(String[] args) {
 		Sort bubbleSort = new BubbleSort();
-		int[] x = new int[] {
-			100, 40, 60, 87, 34, 11, 56, 0, 2, 57, 50, 40, 34
-		};
+		Random random = new Random();
+		int[] x = new int[10];
+		for (int i = 0; i < x.length; i++)
+			x[i] = random.nextInt();
 		bubbleSort.sort(x);
 		for (int value : x) {
 			System.out.print(value + "  ");

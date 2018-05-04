@@ -13,7 +13,13 @@ import java.util.*;
  * @since 2018.04.16
  */
 public class RadixSort implements Sort {
-
+	// 创建从0到9的十个桶
+	private static final Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
+	static {
+		for (int i = 0; i < 10; i++)
+			map.put(i, new ArrayList<Integer>());
+	}
+	
 	public static void main(String[] args) {
 		Sort radixSort = new RadixSort();
 		int[] x = new int[] {
@@ -30,21 +36,18 @@ public class RadixSort implements Sort {
 		sort(x, 1);
 	}
 
-	private void sort(int[] x, int offset) {
-		// 创建从0到9的十个桶
-		Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
-		for (int i = 0; i < 10; i++)
-			map.put(i, new ArrayList<Integer>());
+	private void sort(int[] x, long offset) {
 		int minvalue = min(x);
 		// 填桶
 		for (int i = 0; i < x.length; i++) {
 			// (x[i] + Math.abs(minvalue)) 保证所有的数都为正数，而且相对大小不变
-			long sum = ((x[i] + Math.abs(minvalue)) / offset);  // 防止溢出
+			long sum = (((long)x[i] + (long)Math.abs(minvalue)) / offset);  // 防止溢出
 			map.get((int)(sum % 10)).add(i);
 		}
 		offset *= 10;
 		// 终止条件
-		if ((Math.abs(minvalue) + max(x)) * 10 < offset)
+		long max = ((long)Math.abs(minvalue) + max(x)) * 10;
+		if (max < offset)
 			return;
 		else {
 			int[] temp = new int[x.length];
@@ -54,11 +57,11 @@ public class RadixSort implements Sort {
 					temp[m++] = x[map.get(i).get(j)]; 
 				}
 			}
-			for (int i = m; i < x.length; i++) {
-				temp[i] = x[i];
-			}
 			for (int i = 0; i < x.length; i++) {
 				x[i] = temp[i];
+			}
+			for (int i = 0; i < map.size(); i++) {
+				map.get(i).clear();
 			}
 			sort(x, offset);
 		}
