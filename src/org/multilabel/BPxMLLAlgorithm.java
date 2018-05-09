@@ -279,25 +279,25 @@ public class BPxMLLAlgorithm {
 //                    }
 //                }
                 
-//                if (isLabel.contains(index)) {
-//                    for (int isNotLabelIndex : isNotLabel) {
-//                        error += Math.exp(-(networkOutputs[index] - networkOutputs[isNotLabelIndex]));         
-//                    }
-//                } else {
-//                    for (int isLabelIndex : isLabel) {
-//                        error -= Math.exp(-(networkOutputs[isLabelIndex] - networkOutputs[index]));
-//                    }
-//                }
-                
                 if (isLabel.contains(index)) {
                     for (int isNotLabelIndex : isNotLabel) {
-                        error += Math.exp(-(networkOutputs[index] + 1) / (networkOutputs[isNotLabelIndex] + 1));         
+                        error += Math.exp(-(networkOutputs[index] - networkOutputs[isNotLabelIndex]));         
                     }
                 } else {
                     for (int isLabelIndex : isLabel) {
-                        error -= Math.exp(-((networkOutputs[isLabelIndex] + 1) / (networkOutputs[index] + 1)));
+                        error -= Math.exp(-(networkOutputs[isLabelIndex] - networkOutputs[index]));
                     }
                 }
+                
+//                if (isLabel.contains(index)) {
+//                    for (int isNotLabelIndex : isNotLabel) {
+//                        error += Math.exp(-(networkOutputs[index] + 1) / (networkOutputs[isNotLabelIndex] + 1));         
+//                    }
+//                } else {
+//                    for (int isLabelIndex : isLabel) {
+//                        error -= Math.exp(-((networkOutputs[isLabelIndex] + 1) / (networkOutputs[index] + 1)));
+//                    }
+//                }
                 
                 error *= 1.0 / (isLabel.size() * isNotLabel.size());
                 neuronsErrors[index] = error;

@@ -52,9 +52,9 @@ public class BPxMLL extends MultiLabelLearnerBase {
     // filter used to convert nominal input attributes into binary-numeric
     private NominalToBinary nominalToBinaryFilter;
     // algorithm parameters
-    private int epochs = 120;
+    private int epochs = 100;
     private final Long randomnessSeed;
-    private double weightsDecayCost = 0.00001;
+    private double weightsDecayCost = 0.000001;
     private double learningRate = 0.05;
     private int[] hiddenLayersTopology;
     // members related to normalization or attributes

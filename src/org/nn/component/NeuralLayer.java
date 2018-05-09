@@ -13,7 +13,7 @@ public class NeuralLayer implements Iterable<Neural> {
 	 * 该神经层上所有的神经元
 	 */
     private List<Neural> allNeurals;
-	
+
     /**
      * 该神经层上神经元的个数
      */
@@ -48,6 +48,22 @@ public class NeuralLayer implements Iterable<Neural> {
 	public int size() {
 		return neuralNumbers;
 	}
+	
+	/**
+	 * 获取所有的神经元
+	 * @return 所有的神经元 --> List< Neural >
+	 */
+	public List<Neural> getAllNeurals() {
+        return allNeurals;
+    }
+	
+	/**
+	 * 设置所有的神经元
+	 * @param allNeurals 所有的神经元 --> List< Neural >
+	 */
+	public void setAllNeurals(List<Neural> allNeurals) {
+        this.allNeurals = allNeurals;
+    }
 	
 	@Override
 	public String toString() {

@@ -13,8 +13,8 @@ public class Neural {
      * 神经元的输入值
      */
 	private double inputValue;
-	
-	/**
+
+    /**
      * 神经元的输出值
      */
     private double outputValue;
@@ -39,6 +39,14 @@ public class Neural {
 	public double getInputValue() {
 		return inputValue;
 	}
+	
+	/**
+	 * 设置神经元输入值
+	 * @param inputValue 神经元输入值 --> double
+	 */
+	public void setInputValue(double inputValue) {
+        this.inputValue = inputValue;
+    }
 
 	/**
 	 * 获取神经元输出值

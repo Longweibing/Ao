@@ -9,138 +9,135 @@ import java.util.*;
  * @since 2017.11.24
  * 
  */
-public class NeuralNetwork {
-	/**
-	 * 输入层
+public class NeuralNetwork implements Iterable<NeuralLayer> {
+    /**
+     * 神经网络所有的层
+     */
+	private List<NeuralLayer> allLayers;
+
+    /**
+	 * 神经网络的层数
 	 */
-	private NeuralLayer inputLayer;
-	/**
-	 * 隐藏层
-	 */
-	private final Map<Integer, NeuralLayer> hiddenLayers;
-	/**
-	 * 输出层
-	 */
-	private final NeuralLayer outputLayer;
-	/**
-	 * 输入层神经元个数
-	 */
-	private final int iSize;
-	/**
-	 * 输出层神经元个数
-	 */
-	private final int oSize;
-	/**
-	 * 隐藏层层数
-	 */
-	private final int hlSize;
-	/**
-	 * 神经元层数
-	 */
-	private final int size;
+	private int layerCount;
 	
 	/**
-	 * 创建神经网络
-	 * @param allLayer 神经网络拓扑，按顺序每个值分别为对应层的神经元个数
+	 * 构建神经网络
+	 * @param allLayers 所有的神经层--> List< NeuralLayer >
 	 */
-	public NeuralNetwork(int[] allLayer) {
-		// 创建输入层
-		this.inputLayer = new NeuralLayer(allLayer[0]);
-		this.iSize = allLayer[0];
-		// 创建隐藏层
-		hiddenLayers = new HashMap<Integer, NeuralLayer>();
-		for (int i = 1; i < allLayer.length - 1; i++) {
-			this.hiddenLayers.put(i-1, new NeuralLayer(allLayer[i]));
-		}
-		this.hlSize = allLayer.length - 2;
-		// 创建输出层
-		this.outputLayer = new NeuralLayer(allLayer[allLayer.length - 1]);
-		this.oSize = allLayer.length - 1;
-		// 神经网络层数
-		this.size = allLayer.length;
+	public NeuralNetwork(List<NeuralLayer> allLayers) {
+	    this.allLayers = allLayers;
+	    this.layerCount = allLayers.size();
 	}
-	/**
-	 * 获取输入层对象
-	 * @return 输入层对象
-	 */
-	public NeuralLayer getInputLayer() {
-		return inputLayer;
-	}
-	/**
-	 * 获取隐藏层对象
-	 * @return 隐藏层对象
-	 */
-	public Map<Integer, NeuralLayer> getHiddenLayer() {
-		return hiddenLayers;
-	}
-	/**
-	 * 获取输出层对象
-	 * @return 输出层对象
-	 */
-	public NeuralLayer getOutputLayer() {
-		return outputLayer;
-	}
-	/**
-	 * 获取输入层神经元个数
-	 * @return 输入层神经元个数
-	 */
-	public int getiSize() {
-		return iSize;
-	}
-	/**
-	 * 获取输出层神经元个数
-	 * @return 输出层神经元个数
-	 */
-	public int getoSize() {
-		return oSize;
-	}
-	/**
-	 * 获取隐藏层层数
-	 * @return 隐藏层层数
-	 */
-	public int getHlSize() {
-		return hlSize;
-	}
-	/**
-	 * 获取隐藏层
-	 * @return 隐藏层
-	 */
-	public Map<Integer, NeuralLayer> getHiddenLayers() {
-		return hiddenLayers;
-	}
-	/**
-	 * 获取神经元层数
-	 * @return 神经元层数
-	 */
-	public int getSize() {
-		return size;
-	}
-//	/**
-//	 * 设置输入层
-//	 * @param input 输入层各神经元输入值
-//	 */
-//	public void setInputLayer(double[] input) {
-//		NeuralLayer x = new NeuralLayer();
-//		for (int i = 0; i < input.length; i++) {
-//			x.add(new Neural(input[i]));
-//		}
-//		this.inputLayer = x;
-//	}
 	
-//	/**
-//	 * 创建神经网络demo
-//	 * @param args 字符串数组
-//	 */
-//	public static void main(String[] args) {
-//		NeuralNetwork nn = new NeuralNetwork(new int[] {2, 3, 10, 7, 6, 4, 5});
-//		// 打印结果
-//		System.out.println("神经网络层数: " + nn.getSize());
-//		System.out.println("输入层结点：" + nn.getInputLayer());
-//		System.out.println("隐藏层层数：" + nn.getHiddenLayer().size());
-//		for (int i = 0; i < nn.getHiddenLayer().size(); i++) {
-//			System.out.println("隐藏层 " + i + "：" + nn.getHiddenLayer().get(i));
-//		}
-//		System.out.println("输出层： " + nn.getOutputLayer());	
-//	}
+	/**
+	 * 构建神经网络
+	 * @param allLayerNeuralCount 神经网络拓扑 --> int[]
+	 */
+	public NeuralNetwork(int[] allLayerNeuralCount) {
+	    allLayers = new ArrayList<NeuralLayer>(3);
+	    for (int i = 0; i < allLayerNeuralCount.length; i++) {
+	        int neuralCount = allLayerNeuralCount[i];
+	        NeuralLayer neural = new NeuralLayer(neuralCount);
+	        allLayers.add(neural);
+	    }
+	    this.layerCount = allLayerNeuralCount.length;
+	}
 	
+	/**
+	 * 神经网络层数
+	 * @return 神经网络层数 --> int
+	 */
+	public int size() {
+	    return this.layerCount;
+	}
+	
+	/**
+	 * 获取神经网络所有的层
+	 * @return 神经网络所有的层 --> List< NeuralLayer >
+	 */
+	public List<NeuralLayer> getAllLayers() {
+        return allLayers;
+    }
+
+	/**
+	 * 设置神经网络所有的层
+	 * @param allLayers 神经网络所有的层 --> List< NeuralLayer >
+	 */
+    public void setAllLayers(List<NeuralLayer> allLayers) {
+        this.allLayers = allLayers;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{" + "\n");
+        sb.append("类型：NeuralNetwork；层数：" + layerCount + "；\n");
+        for (int i = 0; i < layerCount; i++) {
+            sb.append("第" + i + "层神经元个数：" + allLayers.get(i).size() + "\n");
+        }
+        for (int i = 0; i < layerCount; i++) {
+            sb.append(allLayers.get(i).toString() + "\n");
+        }
+        sb.append("}");
+        return sb.toString();
+        
+    }
+
+    @Override
+    public Iterator<NeuralLayer> iterator() {
+        return new Iterator<NeuralLayer>() {
+            private int firstIndex;
+            
+            @Override
+            public boolean hasNext() {
+                return firstIndex < layerCount;
+            }
+
+            @Override
+            public NeuralLayer next() {
+                return allLayers.get(firstIndex++);
+            }  
+        };
+    }
+    
+    /**
+     * 返回可迭代的神经网络：从输出层到输入层（逆序）<br>
+     * 这里类似于适配器模式
+     * @return 可迭代对象 --> Iterable< NeuralLayer >
+     */
+    public Iterable<NeuralLayer> reverse() {
+        return new Iterable<NeuralLayer>() {
+            @Override
+            public Iterator<NeuralLayer> iterator() {
+                return new Iterator<NeuralLayer>() {
+                    private int lastIndex = layerCount - 1;
+                    
+                    @Override
+                    public boolean hasNext() {
+                        return lastIndex >= 0;
+                    }
+
+                    @Override
+                    public NeuralLayer next() {
+                        return allLayers.get(lastIndex--);
+                    }
+                };
+            }            
+        };  
+    }
+    
+    public static void main(String[] args) {     
+        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[] {2, 3, 4});
+        System.out.println(neuralNetwork);
+        
+        // for-each遍历
+        for (NeuralLayer neuralLayer : neuralNetwork) {
+            System.out.println(neuralLayer);
+        }
+        
+     // for-each逆序遍历
+        for (NeuralLayer neuralLayer : neuralNetwork.reverse()) {
+            System.out.println(neuralLayer);
+        }
+    }
 }
